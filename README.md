@@ -1,24 +1,21 @@
-# Streamlit - Tłumacz EN → DE
+# Streamlit - tłumacz EN -> DE
 
-Aplikacja Streamlit tłumacząca tekst z języka angielskiego na język niemiecki,
-zbudowana z wykorzystaniem modelu [`Helsinki-NLP/opus-mt-en-de`](https://huggingface.co/Helsinki-NLP/opus-mt-en-de)
-z Hugging Face.
-
-Projekt zrealizowany w ramach przedmiotu **SUML** (Środowiska uruchomieniowe AutoML), Lab5: Streamlit.
+Aplikacja Streamlit tłumacząca tekst z angielskiego na niemiecki
+(SUML, Lab5). Model Helsinki-NLP/opus-mt-en-de z Hugging Face.
 
 s25508
 
-## Uruchomienie lokalne
+## Uruchomienie
 
 ```
 pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-Pierwsze uruchomienie pobierze model z Hugging Face (~300 MB).
+Pierwsze uruchomienie pobiera model z Hugging Face (ok. 300 MB).
 
 ## Pliki
 
-- `streamlit_app.py` — interfejs aplikacji
-- `translator_utils.py` — ładowanie modelu i funkcja tłumacząca
-- `requirements.txt` — zależności
+- `streamlit_app.py` - aplikacja
+- `translator_utils.py` - ładowanie modelu i funkcja tłumacząca
+- `requirements.txt` - zależności

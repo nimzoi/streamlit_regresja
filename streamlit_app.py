@@ -2,33 +2,21 @@ import streamlit as st
 
 from translator_utils import MODEL_NAME, load_translator, translate
 
-st.set_page_config(
-    page_title="EN → DE Translator",
-    page_icon="🇩🇪",
-    layout="centered",
+st.set_page_config(page_title="Tłumacz EN-DE", layout="centered")
+
+st.title("Tłumacz angielsko-niemiecki")
+
+st.write(
+    "Aplikacja tłumaczy tekst z języka angielskiego na język niemiecki. "
+    "Wykorzystuje model Helsinki-NLP/opus-mt-en-de z Hugging Face."
 )
 
-st.title("🇬🇧 → 🇩🇪 Tłumacz angielsko-niemiecki")
-
-st.markdown(
-    """
-    Aplikacja tłumaczy tekst z **języka angielskiego** na **język niemiecki**.
-
-    Pod maską działa model [`Helsinki-NLP/opus-mt-en-de`](https://huggingface.co/Helsinki-NLP/opus-mt-en-de)
-    pobrany z Hugging Face.
-
-    **Jak korzystać:**
-    1. Wpisz lub wklej tekst po angielsku w pole poniżej.
-    2. Kliknij **Przetłumacz**.
-    3. Tłumaczenie pojawi się w polu wynikowym — możesz je skopiować.
-    """
+st.write(
+    "Aby przetłumaczyć tekst, wpisz lub wklej go w pole poniżej "
+    "i kliknij przycisk Przetłumacz."
 )
 
-mode = st.sidebar.radio(
-    "Tryb",
-    ["Tłumacz", "O aplikacji"],
-    index=0,
-)
+mode = st.sidebar.radio("Tryb", ["Tłumacz", "O aplikacji"], index=0)
 
 if mode == "O aplikacji":
     st.subheader("O aplikacji")
@@ -36,54 +24,34 @@ if mode == "O aplikacji":
         "Projekt zrealizowany w ramach przedmiotu SUML "
         "(Środowiska uruchomieniowe AutoML), Lab5: Streamlit."
     )
-    st.write(f"Model: `{MODEL_NAME}`")
+    st.write(f"Model: {MODEL_NAME}")
     st.write(
-        "Pierwsze uruchomienie może potrwać dłużej — model jest "
-        "pobierany z Hugging Face i ładowany do pamięci. Kolejne "
-        "tłumaczenia są już szybkie (model jest cache'owany)."
+        "Pierwsze uruchomienie może potrwać dłużej, ponieważ model "
+        "jest pobierany z Hugging Face. Kolejne tłumaczenia są szybkie."
     )
 else:
-    with st.status("Ładuję model tłumaczący...", expanded=False) as status:
+    with st.spinner("Ładuję model..."):
         try:
             load_translator()
-            status.update(label="Model gotowy ✅", state="complete")
         except Exception as e:
-            status.update(label="Nie udało się załadować modelu", state="error")
-            st.error(f"Błąd ładowania modelu: {e}")
+            st.error(f"Nie udało się załadować modelu: {e}")
             st.stop()
 
     st.subheader("Tekst do tłumaczenia")
-    text_in = st.text_area(
-        "Tekst po angielsku",
-        height=160,
-        placeholder="Type or paste English text here...",
-    )
+    text_in = st.text_area("Tekst po angielsku", height=160)
 
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        go = st.button("Przetłumacz", type="primary", use_container_width=True)
-    with col2:
-        clear = st.button("Wyczyść", use_container_width=True)
-
-    if clear:
-        st.rerun()
-
-    if go:
+    if st.button("Przetłumacz"):
         if not text_in.strip():
             st.warning("Podaj tekst do tłumaczenia.")
         else:
             try:
                 with st.spinner("Tłumaczę..."):
                     translation = translate(text_in.strip())
-                st.success("Gotowe!")
-                st.subheader("Tłumaczenie (DE)")
-                st.text_area(
-                    "Tekst po niemiecku",
-                    value=translation,
-                    height=160,
-                )
+                st.success("Gotowe.")
+                st.subheader("Tłumaczenie")
+                st.text_area("Tekst po niemiecku", value=translation, height=160)
             except Exception as e:
-                st.error(f"Wystąpił błąd podczas tłumaczenia: {e}")
+                st.error(f"Błąd podczas tłumaczenia: {e}")
 
 st.write("---")
 st.caption("s25508")
